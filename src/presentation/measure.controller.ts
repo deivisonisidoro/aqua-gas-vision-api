@@ -1,13 +1,14 @@
 import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
-import { MeasureService } from './measure.service';
-import { UploadMeasureDto } from './dto/upload-measure.dto';
-import { ConfirmMeasurementDto } from './dto/confirm-measure.dto';
 import { ApiTags } from '@nestjs/swagger';
+
+import { UploadMeasureDto } from '../domain/dto/upload-measure.dto';
+import { ConfirmMeasurementDto } from '../domain/dto/confirm-measure.dto';
+import { AbstractMeasureService } from '../domain/services/abstract.measure.service';
 
 @ApiTags('measures')
 @Controller()
 export class MeasureController {
-  constructor(private readonly measureService: MeasureService) {}
+  constructor(private readonly measureService: AbstractMeasureService) {}
 
   @Post("upload")
   upload(@Body() uploadMeasureDto: UploadMeasureDto) {

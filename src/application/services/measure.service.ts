@@ -1,12 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { UploadMeasureDto } from './dto/upload-measure.dto';
-import { ConfirmMeasurementDto } from './dto/confirm-measure.dto';
-import { MeasureRepository } from './measure.repository';
+import { UploadMeasureDto } from '../../domain/dto/upload-measure.dto';
+import { ConfirmMeasurementDto } from '../../domain/dto/confirm-measure.dto';
+import { AbstractMeasureService } from '../../domain/services/abstract.measure.service';
+import { AbstractMeasureRepository } from '../../domain/repositories/abstract.measure.repository';
+
 
 @Injectable()
-export class MeasureService {
+export class MeasureService extends AbstractMeasureService {
 
-  constructor(private readonly measureRepository: MeasureRepository) {}
+  constructor(protected readonly measureRepository: AbstractMeasureRepository) {
+    super()
+  }
+
 
   upload(uploadMeasureDto: UploadMeasureDto) {
     return this.measureRepository.create(uploadMeasureDto);

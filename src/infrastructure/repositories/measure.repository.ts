@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../database/prisma.service';
 import { Measure } from '@prisma/client';
-import { UploadMeasureDto } from './dto/upload-measure.dto';
+import { UploadMeasureDto } from '../../domain/dto/upload-measure.dto';
+import { AbstractMeasureRepository } from '../../domain/repositories/abstract.measure.repository';
 
 @Injectable()
-export class MeasureRepository {
-  constructor(private readonly prisma: PrismaService) {}
+export class MeasureRepository extends AbstractMeasureRepository {
+  constructor(private readonly prisma: PrismaService) {
+    super();
+  }
 
   async create(data: UploadMeasureDto): Promise<Measure> {
     return this.prisma.measure.create({

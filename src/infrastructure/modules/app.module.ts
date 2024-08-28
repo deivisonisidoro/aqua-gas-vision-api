@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { MeasureModule } from './measure/measure.module';
-import { PrismaService } from './prisma.service';
+import { MeasureModule } from './measure.module';
+import { PrismaService } from '../database/prisma.service';
 
 @Module({
   imports: [MeasureModule],
