@@ -1,18 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { UploadMeasureDto } from './dto/upload-measure.dto';
 import { ConfirmMeasurementDto } from './dto/confirm-measure.dto';
+import { MeasureRepository } from './measure.repository';
 
 @Injectable()
 export class MeasureService {
+
+  constructor(private readonly measureRepository: MeasureRepository) {}
+
   upload(uploadMeasureDto: UploadMeasureDto) {
-    return 'This action adds a new measure';
+    return this.measureRepository.create(uploadMeasureDto);
   }
 
   findByCustomerCode(customer_code: string) {
-    return `This action returns a #${customer_code} measure`;
+    return this.measureRepository.findByCustomerCode(customer_code);
   }
 
   confirm(confirmMeasurementDto: ConfirmMeasurementDto) {
-    return `This action updates a #${confirmMeasurementDto} measure`;
+    return  this.measureRepository.update(confirmMeasurementDto.measure_uuid, {
+      has_confirmed: true,
+      measure_value: confirmMeasurementDto.confirmed_value
+    });
   }
 }
