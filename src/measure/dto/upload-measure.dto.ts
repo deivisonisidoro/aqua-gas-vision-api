@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsEnum, IsDateString, Matches } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsString, IsEnum, IsDateString, Matches, IsOptional, IsInt, Min } from 'class-validator';
 
 /**
  * DTO for uploading a measurement.
@@ -34,4 +34,13 @@ export class UploadMeasureDto {
   })
   @IsEnum(['WATER', 'GAS'], { message: "measure_type must be either 'WATER' or 'GAS'" })
   measure_type: 'WATER' | 'GAS';
+
+  @ApiPropertyOptional({
+    description: 'The value of the measurement.',
+    type: Number,
+  })
+  @IsOptional()
+  @IsInt({ message: 'measure_value must be an integer' })
+  @Min(0, { message: 'measure_value must be a positive integer' })
+  measure_value?: number;
 }
