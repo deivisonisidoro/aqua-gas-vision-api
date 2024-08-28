@@ -12,13 +12,13 @@ export class MeasureRepository extends AbstractMeasureRepository {
 
   async create(data: UploadMeasureDto): Promise<Measure> {
     return this.prisma.measure.create({
-        data: {
-            measure_type: data.measure_type,
-            customer_code: data.customer_code,
-            image_url: data.image,
-            measure_value: data.measure_value
-        }
-    } );
+      data: {
+        measure_type: data.measure_type,
+        customer_code: data.customer_code,
+        image_url: data.image,
+        measure_value: data.measure_value,
+      },
+    });
   }
 
   async findAll(): Promise<Measure[]> {

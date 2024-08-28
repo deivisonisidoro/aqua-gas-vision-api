@@ -1,12 +1,10 @@
 import { Measure } from '@prisma/client';
 import { UploadMeasureDto } from '../dto/upload-measure.dto';
 
-
 /**
  * Abstract class defining the core methods for measure repositories.
  */
 export abstract class AbstractMeasureRepository {
-
   /**
    * Creates a new measurement.
    * @param data - Data transfer object for uploading a measurement.
@@ -40,5 +38,8 @@ export abstract class AbstractMeasureRepository {
    * @param data - Partial data to update the measurement.
    * @returns Promise of the updated measurement.
    */
-  abstract update(measure_uuid: string, data: Partial<Measure>): Promise<Measure>;
+  abstract update(
+    measure_uuid: string,
+    data: Partial<Measure>,
+  ): Promise<Measure>;
 }

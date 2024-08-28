@@ -10,7 +10,7 @@ import { AbstractMeasureService } from '../domain/services/abstract.measure.serv
 export class MeasureController {
   constructor(private readonly measureService: AbstractMeasureService) {}
 
-  @Post("upload")
+  @Post('upload')
   upload(@Body() uploadMeasureDto: UploadMeasureDto) {
     return this.measureService.upload(uploadMeasureDto);
   }
@@ -20,7 +20,7 @@ export class MeasureController {
     return this.measureService.findByCustomerCode(customer_code);
   }
 
-  @Patch("confirm")
+  @Patch('confirm')
   confirm(@Body() confirmMeasureDto: ConfirmMeasurementDto) {
     return this.measureService.confirm(confirmMeasureDto);
   }

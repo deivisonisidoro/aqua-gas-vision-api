@@ -8,7 +8,7 @@ import { AbstractMeasureRepository } from '../../domain/repositories/abstract.me
 
 @Module({
   controllers: [MeasureController],
-  providers: [ 
+  providers: [
     {
       provide: AbstractMeasureService,
       useClass: MeasureService,
@@ -16,7 +16,8 @@ import { AbstractMeasureRepository } from '../../domain/repositories/abstract.me
     {
       provide: AbstractMeasureRepository,
       useClass: MeasureRepository,
-    }
-  , PrismaService],
+    },
+    PrismaService,
+  ],
 })
 export class MeasureModule {}

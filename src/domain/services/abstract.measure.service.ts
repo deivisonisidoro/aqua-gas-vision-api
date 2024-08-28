@@ -1,12 +1,10 @@
-import { ConfirmMeasurementDto } from "../dto/confirm-measure.dto";
-import { UploadMeasureDto } from "../dto/upload-measure.dto";
-
+import { ConfirmMeasurementDto } from '../dto/confirm-measure.dto';
+import { UploadMeasureDto } from '../dto/upload-measure.dto';
 
 /**
  * Abstract class defining the core methods for measure services.
  */
 export abstract class AbstractMeasureService {
-
   /**
    * Uploads a new measurement.
    * @param uploadMeasureDto - Data transfer object for uploading a measurement.
