@@ -1,4 +1,5 @@
 import { ConfirmMeasurementDto } from '../dto/confirm-measure.dto';
+import { MeasureQueryDto } from '../dto/query.measure.dto';
 import { UploadMeasureDto } from '../dto/upload-measure.dto';
 
 /**
@@ -15,9 +16,13 @@ export abstract class AbstractMeasureService {
   /**
    * Finds measurements by customer code.
    * @param customer_code - The unique code identifying the customer.
+   * @param measureQueryDto - The dto with the all query fields.
    * @returns Promise of measurements associated with the given customer code.
    */
-  abstract findByCustomerCode(customer_code: string): Promise<any>;
+  abstract find(
+    customer_code: string,
+    measureQueryDto?: MeasureQueryDto,
+  ): Promise<any>;
 
   /**
    * Confirms a measurement.
