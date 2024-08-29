@@ -21,7 +21,7 @@ export class MeasureService extends AbstractMeasureService {
       customer_code,
       measureQueryDto,
     );
-    if (measure.length == 0) {
+    if (measure.measures.length == 0) {
       throw new NotFoundException(ErrorMessagesMessageEnum.MEASURE_NOT_FOUND);
     }
 

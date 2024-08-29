@@ -4,6 +4,7 @@ import { Measure } from '@prisma/client';
 import { UploadMeasureDto } from '../../domain/dto/upload-measure.dto';
 import { AbstractMeasureRepository } from '../../domain/repositories/abstract.measure.repository';
 import { MeasureQueryDto } from 'src/domain/dto/query.measure.dto';
+import { CustomerMeasuresResponseDto } from 'src/domain/dto/costume.,measure.response.dto';
 
 @Injectable()
 export class MeasureRepository extends AbstractMeasureRepository {
@@ -39,10 +40,23 @@ export class MeasureRepository extends AbstractMeasureRepository {
   async find(
     customer_code: string,
     measureQueryDto: MeasureQueryDto,
-  ): Promise<Measure[] | null> {
-    return this.prisma.measure.findMany({
+  ): Promise<CustomerMeasuresResponseDto> {
+    const measures = await this.prisma.measure.findMany({
       where: { customer_code, ...measureQueryDto },
+      select: {
+        measure_value: false,
+        customer_code: false,
+        measure_uuid: true,
+        measure_datetime: true,
+        measure_type: true,
+        has_confirmed: true,
+        image_url: true,
+      },
     });
+    return {
+      customer_code,
+      measures,
+    };
   }
   async update(measure_uuid: string, data: Partial<Measure>): Promise<Measure> {
     return this.prisma.measure.update({
