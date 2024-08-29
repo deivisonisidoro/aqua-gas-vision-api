@@ -1,27 +1,17 @@
-/**
- * Interface representing the structure of a Measure entity.
- */
-export interface IMeasureEntity {
-  measure_uuid: string;
-  measure_datetime: Date;
-  measure_type: 'WATER' | 'GAS';
-  has_confirmed: boolean;
-  image_url: string;
-  customer_code: string;
-  measure_value: number;
-}
+import { BadRequestException } from '@nestjs/common';
+import { MeasureEntityType } from './@types/measure.entity.type';
 
 /**
  * Entity representing a Measure.
  *
- * This class implements the IMeasureEntity interface and provides
+ * This class implements the MeasureEntityType interface and provides
  * getters and setters for each property. It is used to manage the
  * measurement data within the application.
  */
-export class MeasureEntity implements IMeasureEntity {
-  private _measure_uuid: string;
+export class MeasureEntity implements MeasureEntityType {
+  private _measure_uuid?: string;
   private _measure_datetime: Date;
-  private _measure_type: 'WATER' | 'GAS';
+  private _measure_type: string;
   private _has_confirmed: boolean;
   private _image_url: string;
   private _customer_code: string;
@@ -30,9 +20,9 @@ export class MeasureEntity implements IMeasureEntity {
   /**
    * Constructs a new MeasureEntity instance.
    *
-   * @param {IMeasureEntity} props - The properties to initialize the MeasureEntity.
+   * @param {MeasureEntityType} props - The properties to initialize the MeasureEntity.
    */
-  constructor(props: IMeasureEntity) {
+  constructor(props: MeasureEntityType) {
     this._measure_uuid = props.measure_uuid;
     this._measure_datetime = props.measure_datetime;
     this._measure_type = props.measure_type;
@@ -41,7 +31,6 @@ export class MeasureEntity implements IMeasureEntity {
     this._customer_code = props.customer_code;
     this._measure_value = props.measure_value;
   }
-
   /** @returns {string} The unique identifier for the measure. */
   get measure_uuid(): string {
     return this._measure_uuid;
@@ -62,13 +51,18 @@ export class MeasureEntity implements IMeasureEntity {
     this._measure_datetime = value;
   }
 
-  /** @returns {'WATER' | 'GAS'} The type of measurement (e.g., WATER or GAS). */
-  get measure_type(): 'WATER' | 'GAS' {
+  /** @returns {string} The type of measurement (e.g., WATER or GAS). */
+  get measure_type(): string {
     return this._measure_type;
   }
 
-  /** @param {'WATER' | 'GAS'} value - The type of measurement (e.g., WATER or GAS). */
-  set measure_type(value: 'WATER' | 'GAS') {
+  /** @param {string} value - The type of measurement (e.g., WATER or GAS). */
+  set measure_type(value: string) {
+    if (value !== 'WATER' && value !== 'GAS') {
+      throw new BadRequestException(
+        "measure_type must be either 'WATER' or 'GAS'",
+      );
+    }
     this._measure_type = value;
   }
 
@@ -89,6 +83,12 @@ export class MeasureEntity implements IMeasureEntity {
 
   /** @param {string} value - URL of the image representing the measurement. */
   set image_url(value: string) {
+    const base64Pattern = /^data:image\/[a-zA-Z]+;base64,/i;
+    if (!base64Pattern.test(value)) {
+      throw new BadRequestException(
+        'image must be a valid base64-encoded image string',
+      );
+    }
     this._image_url = value;
   }
 
@@ -109,6 +109,16 @@ export class MeasureEntity implements IMeasureEntity {
 
   /** @param {number} value - The value of the measurement. */
   set measure_value(value: number) {
+    if (value !== undefined) {
+      if (!Number.isInteger(value)) {
+        throw new BadRequestException('measure_value must be an integer');
+      }
+      if (value < 0) {
+        throw new BadRequestException(
+          'measure_value must be a positive integer',
+        );
+      }
+    }
     this._measure_value = value;
   }
 }
