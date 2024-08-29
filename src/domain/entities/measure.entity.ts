@@ -1,5 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { MeasureEntityType } from './@types/measure.entity.type';
+import { ErrorMessagesMessageEnum } from '../enums/error.messages/message.enum';
 
 /**
  * Entity representing a Measure.
@@ -60,7 +61,7 @@ export class MeasureEntity implements MeasureEntityType {
   set measure_type(value: string) {
     if (value !== 'WATER' && value !== 'GAS') {
       throw new BadRequestException(
-        "measure_type must be either 'WATER' or 'GAS'",
+        ErrorMessagesMessageEnum.INVALID_MEASURE_TYPE,
       );
     }
     this._measure_type = value;
@@ -85,9 +86,7 @@ export class MeasureEntity implements MeasureEntityType {
   set image_url(value: string) {
     const base64Pattern = /^data:image\/[a-zA-Z]+;base64,/i;
     if (!base64Pattern.test(value)) {
-      throw new BadRequestException(
-        'image must be a valid base64-encoded image string',
-      );
+      throw new BadRequestException(ErrorMessagesMessageEnum.INVALID_IMAGE_URL);
     }
     this._image_url = value;
   }
@@ -111,11 +110,13 @@ export class MeasureEntity implements MeasureEntityType {
   set measure_value(value: number) {
     if (value !== undefined) {
       if (!Number.isInteger(value)) {
-        throw new BadRequestException('measure_value must be an integer');
+        throw new BadRequestException(
+          ErrorMessagesMessageEnum.INVALID_MEASURE_VALUE,
+        );
       }
       if (value < 0) {
         throw new BadRequestException(
-          'measure_value must be a positive integer',
+          ErrorMessagesMessageEnum.INVALID_MEASURE_VALUE,
         );
       }
     }

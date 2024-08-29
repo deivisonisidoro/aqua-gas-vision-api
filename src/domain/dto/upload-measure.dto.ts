@@ -8,6 +8,7 @@ import {
   IsInt,
   Min,
 } from 'class-validator';
+import { ErrorMessagesMessageEnum } from '../enums/error.messages/message.enum';
 
 /**
  * DTO for uploading a measurement.
@@ -17,9 +18,9 @@ export class UploadMeasureDto {
     description: 'The base64 encoded image representing the measurement.',
     type: String,
   })
-  @IsString({ message: 'image must be a string' })
+  @IsString({ message: ErrorMessagesMessageEnum.INVALID_IMAGE_URL })
   @Matches(/^data:image\/[a-zA-Z]+;base64,/i, {
-    message: 'image must be a valid base64-encoded image string',
+    message: ErrorMessagesMessageEnum.INVALID_IMAGE_URL,
   })
   image: string;
 
@@ -27,7 +28,7 @@ export class UploadMeasureDto {
     description: 'The unique code identifying the customer.',
     type: String,
   })
-  @IsString({ message: 'customer_code must be a string' })
+  @IsString({ message: ErrorMessagesMessageEnum.INVALID_CUSTOMER_CODE })
   customer_code: string;
 
   @ApiProperty({
@@ -37,7 +38,7 @@ export class UploadMeasureDto {
   })
   @IsDateString(
     {},
-    { message: 'measure_datetime must be a valid ISO 8601 date string' },
+    { message: ErrorMessagesMessageEnum.INVALID_MEASURE_DATETIME },
   )
   measure_datetime: Date;
 
@@ -46,16 +47,16 @@ export class UploadMeasureDto {
     enum: ['WATER', 'GAS'],
   })
   @IsEnum(['WATER', 'GAS'], {
-    message: "measure_type must be either 'WATER' or 'GAS'",
+    message: ErrorMessagesMessageEnum.INVALID_MEASURE_TYPE,
   })
-  measure_type: 'WATER' | 'GAS';
+  measure_type: string;
 
   @ApiPropertyOptional({
     description: 'The value of the measurement.',
     type: Number,
   })
   @IsOptional()
-  @IsInt({ message: 'measure_value must be an integer' })
-  @Min(0, { message: 'measure_value must be a positive integer' })
+  @IsInt({ message: ErrorMessagesMessageEnum.INVALID_MEASURE_VALUE })
+  @Min(0, { message: ErrorMessagesMessageEnum.INVALID_MEASURE_VALUE })
   measure_value?: number;
 }
