@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UploadMeasureDto } from '../../domain/dto/upload-measure.dto';
 import { ConfirmMeasurementDto } from '../../domain/dto/confirm-measure.dto';
 import { AbstractMeasureService } from '../../domain/services/abstract.measure.service';
@@ -22,16 +26,38 @@ export class MeasureService extends AbstractMeasureService {
       measureQueryDto,
     );
     if (measure.measures.length == 0) {
-      throw new NotFoundException(ErrorMessagesMessageEnum.MEASURE_NOT_FOUND);
+      throw new NotFoundException(
+        ErrorMessagesMessageEnum.MEASURE_NOT_FOUND,
+        'MEASURE_NOT_FOUND',
+      );
     }
 
     return measure;
   }
 
-  confirm(confirmMeasurementDto: ConfirmMeasurementDto) {
-    return this.measureRepository.update(confirmMeasurementDto.measure_uuid, {
+  async confirm(confirmMeasurementDto: ConfirmMeasurementDto) {
+    const measure = await this.measureRepository.findOne(
+      confirmMeasurementDto.measure_uuid,
+    );
+
+    if (!measure) {
+      throw new NotFoundException(
+        ErrorMessagesMessageEnum.MEASURE_NOT_FOUND,
+        'MEASURE_NOT_FOUND',
+      );
+    }
+    if (measure.has_confirmed) {
+      throw new ConflictException(
+        ErrorMessagesMessageEnum.CONFIRMATION_DUPLICATE,
+        'CONFIRMATION_DUPLICATE',
+      );
+    }
+    await this.measureRepository.update(confirmMeasurementDto.measure_uuid, {
       has_confirmed: true,
       measure_value: confirmMeasurementDto.confirmed_value,
     });
+    return {
+      success: true,
+    };
   }
 }

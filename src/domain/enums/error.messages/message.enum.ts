@@ -59,4 +59,9 @@ export enum ErrorMessagesMessageEnum {
    * Error message for when a measure is not found.
    */
   MEASURE_NOT_FOUND = 'Nenhuma leitura encontrada',
+
+  /**
+   * Error message for when a measure has already been recorded for the month.
+   */
+  CONFIRMATION_DUPLICATE = 'Leitura do mês já realizada',
 }
