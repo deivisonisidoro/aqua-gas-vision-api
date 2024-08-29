@@ -2,7 +2,7 @@
  * Enum representing validation error messages in the application.
  *
  * This enum centralizes all validation error messages that are used
- * across application. The error messages are provided
+ * across the application. The error messages are provided
  * in Portuguese to match the application’s requirements.
  *
  * @enum {string}
@@ -12,7 +12,7 @@ export enum ErrorMessagesMessageEnum {
    * Error message for an invalid measure type.
    * Valid values are 'WATER' or 'GAS'.
    */
-  INVALID_MEASURE_TYPE = "measure_type deve ser 'WATER' ou 'GAS'",
+  INVALID_MEASURE_TYPE = 'Tipo de medição não permitida',
 
   /**
    * Error message for an invalid measure datetime.
@@ -54,4 +54,9 @@ export enum ErrorMessagesMessageEnum {
    * Error message for a confirmed value that is less than 0.
    */
   MIN_CONFIRMED_VALUE = 'confirmed_value deve ser no mínimo 0',
+
+  /**
+   * Error message for when a measure is not found.
+   */
+  MEASURE_NOT_FOUND = 'Nenhuma leitura encontrada',
 }
