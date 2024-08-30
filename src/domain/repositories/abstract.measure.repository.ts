@@ -1,7 +1,7 @@
 import { Measure } from '@prisma/client';
 import { UploadMeasureDto } from '../dto/upload-measure.dto';
-import { MeasureQueryDto } from '../dto/query.measure.dto';
-import { CustomerMeasuresResponseDto } from '../dto/costume.,measure.response.dto';
+import { MeasureParametersDto } from '../dto/params.measure.dto';
+import { MeasureResponseDto } from '../dto/measure.response.dto';
 
 /**
  * Abstract class defining the core methods for measure repositories.
@@ -41,9 +41,8 @@ export abstract class AbstractMeasureRepository {
    * @returns Promise of measurements associated with the given customer code or null if not found.
    */
   abstract find(
-    customer_code: string,
-    measureQueryDto?: MeasureQueryDto,
-  ): Promise<CustomerMeasuresResponseDto>;
+    MeasureParametersDto?: MeasureParametersDto,
+  ): Promise<MeasureResponseDto[]>;
 
   /**
    * Updates a measurement.

@@ -12,7 +12,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { UploadMeasureDto } from '../domain/dto/upload-measure.dto';
 import { ConfirmMeasurementDto } from '../domain/dto/confirm-measure.dto';
 import { AbstractMeasureService } from '../domain/services/abstract.measure.service';
-import { MeasureQueryDto } from '../domain/dto/query.measure.dto';
+import { MeasureParametersDto } from '../domain/dto/params.measure.dto';
 
 @ApiTags('measures')
 @Controller()
@@ -27,9 +27,10 @@ export class MeasureController {
   @Get(':customer_code/list')
   find(
     @Param('customer_code') customer_code: string,
-    @Query() measureQueryDto?: MeasureQueryDto,
+    @Query() MeasureParametersDto?: MeasureParametersDto,
   ) {
-    return this.measureService.find(customer_code, measureQueryDto);
+    MeasureParametersDto = { customer_code, ...MeasureParametersDto };
+    return this.measureService.find(MeasureParametersDto);
   }
 
   @Patch('confirm')
