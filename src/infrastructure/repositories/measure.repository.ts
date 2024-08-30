@@ -5,6 +5,7 @@ import { AbstractMeasureRepository } from '../../domain/repositories/abstract.me
 import { MeasureParametersDto } from 'src/domain/dto/params.measure.dto';
 import { MeasureResponseDto } from 'src/domain/dto/measure.response.dto';
 import { ConfirmMeasurementDto } from 'src/domain/dto/confirm-measure.dto';
+import { Measure } from '@prisma/client';
 
 @Injectable()
 export class MeasureRepository extends AbstractMeasureRepository {
@@ -79,18 +80,9 @@ export class MeasureRepository extends AbstractMeasureRepository {
     return this.prisma.measure.findMany();
   }
 
-  async findOne(measure_uuid: string): Promise<MeasureResponseDto | null> {
+  async findOne(measure_uuid: string): Promise<Measure | null> {
     return this.prisma.measure.findUnique({
       where: { measure_uuid },
-      select: {
-        measure_value: false,
-        customer_code: false,
-        measure_uuid: true,
-        measure_datetime: true,
-        measure_type: true,
-        has_confirmed: true,
-        image_url: true,
-      },
     });
   }
   async findByCustomerCode(

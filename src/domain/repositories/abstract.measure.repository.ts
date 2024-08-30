@@ -1,6 +1,7 @@
 import { UploadMeasureDto } from '../dto/upload-measure.dto';
 import { MeasureParametersDto } from '../dto/params.measure.dto';
 import { MeasureResponseDto } from '../dto/measure.response.dto';
+import { Measure } from '@prisma/client';
 
 /**
  * Abstract class defining the core methods for measure repositories.
@@ -24,7 +25,7 @@ export abstract class AbstractMeasureRepository {
    * @param measure_uuid - The unique identifier for the measurement.
    * @returns Promise of the measurement or null if not found.
    */
-  abstract findOne(measure_uuid: string): Promise<MeasureResponseDto | null>;
+  abstract findOne(measure_uuid: string): Promise<Measure | null>;
 
   /**
    * Finds measurements by customer code.
