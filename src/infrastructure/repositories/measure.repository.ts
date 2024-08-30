@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
-import { Measure } from '@prisma/client';
 import { UploadMeasureDto } from '../../domain/dto/upload-measure.dto';
 import { AbstractMeasureRepository } from '../../domain/repositories/abstract.measure.repository';
 import { MeasureParametersDto } from 'src/domain/dto/params.measure.dto';
 import { MeasureResponseDto } from 'src/domain/dto/measure.response.dto';
+import { ConfirmMeasurementDto } from 'src/domain/dto/confirm-measure.dto';
 
 @Injectable()
 export class MeasureRepository extends AbstractMeasureRepository {
@@ -12,7 +12,7 @@ export class MeasureRepository extends AbstractMeasureRepository {
     super();
   }
 
-  async create(data: UploadMeasureDto): Promise<Measure> {
+  async create(data: UploadMeasureDto): Promise<MeasureResponseDto> {
     return this.prisma.measure.create({
       data: {
         measure_type: data.measure_type,
@@ -20,6 +20,15 @@ export class MeasureRepository extends AbstractMeasureRepository {
         image_url: data.image,
         measure_value: data.measure_value,
         measure_datetime: data.measure_datetime,
+      },
+      select: {
+        measure_value: false,
+        customer_code: false,
+        measure_uuid: true,
+        measure_datetime: true,
+        measure_type: true,
+        has_confirmed: true,
+        image_url: true,
       },
     });
   }
@@ -66,16 +75,27 @@ export class MeasureRepository extends AbstractMeasureRepository {
     return measures;
   }
 
-  async findAll(): Promise<Measure[]> {
+  async findAll(): Promise<MeasureResponseDto[]> {
     return this.prisma.measure.findMany();
   }
 
-  async findOne(measure_uuid: string): Promise<Measure | null> {
+  async findOne(measure_uuid: string): Promise<MeasureResponseDto | null> {
     return this.prisma.measure.findUnique({
       where: { measure_uuid },
+      select: {
+        measure_value: false,
+        customer_code: false,
+        measure_uuid: true,
+        measure_datetime: true,
+        measure_type: true,
+        has_confirmed: true,
+        image_url: true,
+      },
     });
   }
-  async findByCustomerCode(customer_code: string): Promise<Measure[] | null> {
+  async findByCustomerCode(
+    customer_code: string,
+  ): Promise<MeasureResponseDto[] | null> {
     return this.prisma.measure.findMany({
       where: { customer_code },
     });
@@ -98,10 +118,25 @@ export class MeasureRepository extends AbstractMeasureRepository {
     });
     return measures;
   }
-  async update(measure_uuid: string, data: Partial<Measure>): Promise<Measure> {
+  async update(
+    measure_uuid: string,
+    data: Partial<ConfirmMeasurementDto>,
+  ): Promise<MeasureResponseDto> {
     return this.prisma.measure.update({
       where: { measure_uuid },
-      data,
+      data: {
+        measure_value: data.confirmed_value,
+        has_confirmed: data.has_confirmed,
+      },
+      select: {
+        measure_value: false,
+        customer_code: false,
+        measure_uuid: true,
+        measure_datetime: true,
+        measure_type: true,
+        has_confirmed: true,
+        image_url: true,
+      },
     });
   }
 }

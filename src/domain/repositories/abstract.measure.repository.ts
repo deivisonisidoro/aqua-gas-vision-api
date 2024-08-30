@@ -1,4 +1,3 @@
-import { Measure } from '@prisma/client';
 import { UploadMeasureDto } from '../dto/upload-measure.dto';
 import { MeasureParametersDto } from '../dto/params.measure.dto';
 import { MeasureResponseDto } from '../dto/measure.response.dto';
@@ -12,27 +11,29 @@ export abstract class AbstractMeasureRepository {
    * @param data - Data transfer object for uploading a measurement.
    * @returns Promise of the created measurement.
    */
-  abstract create(data: UploadMeasureDto): Promise<Measure>;
+  abstract create(data: UploadMeasureDto): Promise<MeasureResponseDto>;
 
   /**
    * Finds all measurements.
    * @returns Promise of all measurements.
    */
-  abstract findAll(): Promise<Measure[]>;
+  abstract findAll(): Promise<MeasureResponseDto[]>;
 
   /**
    * Finds a measurement by its unique identifier.
    * @param measure_uuid - The unique identifier for the measurement.
    * @returns Promise of the measurement or null if not found.
    */
-  abstract findOne(measure_uuid: string): Promise<Measure | null>;
+  abstract findOne(measure_uuid: string): Promise<MeasureResponseDto | null>;
 
   /**
    * Finds measurements by customer code.
    * @param customer_code - The unique code identifying the customer.
    * @returns Promise of measurements associated with the given customer code or null if not found.
    */
-  abstract findByCustomerCode(customer_code: string): Promise<Measure[] | null>;
+  abstract findByCustomerCode(
+    customer_code: string,
+  ): Promise<MeasureResponseDto[] | null>;
 
   /**
    * Finds measurements by customer code.
@@ -64,6 +65,6 @@ export abstract class AbstractMeasureRepository {
    */
   abstract update(
     measure_uuid: string,
-    data: Partial<Measure>,
-  ): Promise<Measure>;
+    data: Partial<MeasureResponseDto>,
+  ): Promise<MeasureResponseDto>;
 }
