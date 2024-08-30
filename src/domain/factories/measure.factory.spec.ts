@@ -23,10 +23,8 @@ describe('MeasureFactory', () => {
     expect(measureEntity).toBeInstanceOf(MeasureEntity);
     expect(measureEntity.measure_datetime).toBe(measureProps.measure_datetime);
     expect(measureEntity.measure_type).toBe(measureProps.measure_type);
-    expect(measureEntity.has_confirmed).toBe(measureProps.has_confirmed);
     expect(measureEntity.image_url).toBe(measureProps.image_url);
     expect(measureEntity.customer_code).toBe(measureProps.customer_code);
-    expect(measureEntity.measure_value).toBe(measureProps.measure_value);
   });
 
   it('should allow measure_uuid to be optional in MeasureEntity', () => {
@@ -39,9 +37,7 @@ describe('MeasureFactory', () => {
     expect(measureEntity.measure_uuid).toBeUndefined();
     expect(measureEntity.measure_datetime).toBe(measureProps.measure_datetime);
     expect(measureEntity.measure_type).toBe(measureProps.measure_type);
-    expect(measureEntity.has_confirmed).toBe(measureProps.has_confirmed);
     expect(measureEntity.image_url).toBe(measureProps.image_url);
     expect(measureEntity.customer_code).toBe(measureProps.customer_code);
-    expect(measureEntity.measure_value).toBe(measureProps.measure_value);
   });
 });

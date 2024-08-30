@@ -56,11 +56,11 @@ describe('MeasureService', () => {
   describe('upload', () => {
     it('should throw a ConflictException if a measure already exists', async () => {
       const uploadMeasureDto: UploadMeasureDto = {
-        measure_type: 'water',
-        measure_datetime: new Date(),
-        image: 'image-url',
+        measure_type: 'WATER',
+        measure_datetime: new Date('2024-08-28T10:00:00Z'),
+        image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA',
         measure_value: null,
-        customer_code: 'test_code',
+        customer_code: 'CUSTOMER123',
       };
 
       jest
@@ -77,11 +77,11 @@ describe('MeasureService', () => {
 
     it('should create a new measure if no existing measure is found', async () => {
       const uploadMeasureDto: UploadMeasureDto = {
-        measure_type: 'water',
-        measure_datetime: new Date(),
-        image: 'image-url',
+        measure_type: 'WATER',
+        measure_datetime: new Date('2024-08-28T10:00:00Z'),
+        image: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA',
         measure_value: null,
-        customer_code: 'test_code',
+        customer_code: 'CUSTOMER123',
       };
 
       jest.spyOn(measureRepository, 'findByTypeAndDate').mockResolvedValue([]);
