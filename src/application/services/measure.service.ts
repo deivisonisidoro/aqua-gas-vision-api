@@ -77,10 +77,11 @@ export class MeasureService extends AbstractMeasureService {
         'CONFIRMATION_DUPLICATE',
       );
     }
-    await this.measureRepository.update(confirmMeasurementDto.measure_uuid, {
-      has_confirmed: true,
-      measure_value: confirmMeasurementDto.confirmed_value,
-    });
+    confirmMeasurementDto.has_confirmed = true;
+    await this.measureRepository.update(
+      confirmMeasurementDto.measure_uuid,
+      confirmMeasurementDto,
+    );
     return {
       success: true,
     };
