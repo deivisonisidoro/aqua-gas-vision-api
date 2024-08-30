@@ -50,8 +50,6 @@ export class MeasureEntity implements MeasureEntityType {
 
   /** @param {Date} value - The date and time when the measurement was taken. */
   set measure_datetime(value: Date) {
-    console.log(value);
-
     if (!(value instanceof Date) || isNaN(value.getTime())) {
       throw new BadRequestException(
         ErrorMessagesMessageEnum.INVALID_DATETIME,
