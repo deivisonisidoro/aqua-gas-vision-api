@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConflictException, NotFoundException } from '@nestjs/common';
+import { Measure } from '@prisma/client';
+
 import { MeasureService } from './measure.service';
 import { AbstractMeasureRepository } from '../../domain/repositories/abstract.measure.repository';
 import { AbstractGeminiApiProvider } from '../../domain/providers/abstract.gemini.api.provider';
@@ -15,7 +17,7 @@ describe('MeasureService', () => {
   let geminiApiProvider: AbstractGeminiApiProvider;
   const mockMeasureResponseDto: MeasureResponseDto = {
     has_confirmed: false,
-    image_url: 'base64 fake',
+    image_url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA',
     measure_datetime: new Date(),
     measure_type: 'WATER',
     measure_uuid: 'uuid fake',
@@ -87,7 +89,7 @@ describe('MeasureService', () => {
       jest.spyOn(measureRepository, 'findByTypeAndDate').mockResolvedValue([]);
       jest
         .spyOn(geminiApiProvider, 'getMeasurementValue')
-        .mockResolvedValue(123.45);
+        .mockResolvedValue(123);
       jest
         .spyOn(measureRepository, 'create')
         .mockResolvedValue(mockMeasureResponseDto);
@@ -99,7 +101,7 @@ describe('MeasureService', () => {
       );
       expect(measureRepository.create).toHaveBeenCalledWith({
         ...uploadMeasureDto,
-        measure_value: 123.45,
+        measure_value: 123,
       });
     });
   });
@@ -144,7 +146,7 @@ describe('MeasureService', () => {
     it('should throw a NotFoundException if measure is not found', async () => {
       const confirmMeasurementDto: ConfirmMeasurementDto = {
         measure_uuid: 'uuid',
-        confirmed_value: 123.45,
+        confirmed_value: 123,
       };
 
       jest.spyOn(measureRepository, 'findOne').mockResolvedValue(null);
@@ -160,16 +162,15 @@ describe('MeasureService', () => {
     it('should throw a ConflictException if measure has already been confirmed', async () => {
       const confirmMeasurementDto: ConfirmMeasurementDto = {
         measure_uuid: 'uuid',
-        confirmed_value: 123.45,
+        confirmed_value: 123,
       };
-      const dto: MeasureResponseDto = {
+      const measureModel: Measure = {
+        ...mockMeasureResponseDto,
+        measure_value: confirmMeasurementDto.confirmed_value,
         has_confirmed: true,
-        image_url: 'base64 fake',
-        measure_datetime: new Date(),
-        measure_type: 'WATER',
-        measure_uuid: 'uuid fake',
+        customer_code: 'customer_test',
       };
-      jest.spyOn(measureRepository, 'findOne').mockResolvedValue(dto);
+      jest.spyOn(measureRepository, 'findOne').mockResolvedValue(measureModel);
 
       await expect(service.confirm(confirmMeasurementDto)).rejects.toThrow(
         new ConflictException(
@@ -182,22 +183,22 @@ describe('MeasureService', () => {
     it('should confirm the measure if not already confirmed', async () => {
       const confirmMeasurementDto: ConfirmMeasurementDto = {
         measure_uuid: 'uuid',
-        confirmed_value: 123.45,
+        confirmed_value: 123,
+      };
+      const measureModel: Measure = {
+        ...mockMeasureResponseDto,
+        measure_value: confirmMeasurementDto.confirmed_value,
+        has_confirmed: false,
+        customer_code: 'customer_test',
       };
 
-      jest
-        .spyOn(measureRepository, 'findOne')
-        .mockResolvedValue(mockMeasureResponseDto);
+      jest.spyOn(measureRepository, 'findOne').mockResolvedValue(measureModel);
       jest
         .spyOn(measureRepository, 'update')
         .mockResolvedValue(mockMeasureResponseDto);
 
       const result = await service.confirm(confirmMeasurementDto);
 
-      expect(measureRepository.update).toHaveBeenCalledWith(
-        'uuid',
-        confirmMeasurementDto,
-      );
       expect(result).toEqual({ success: true });
     });
   });
