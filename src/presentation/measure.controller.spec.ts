@@ -5,6 +5,8 @@ import { AbstractMeasureService } from '../domain/services/abstract.measure.serv
 import { AbstractMeasureRepository } from '../domain/repositories/abstract.measure.repository';
 import { MeasureRepository } from '../infrastructure/repositories/measure.repository';
 import { PrismaService } from '../infrastructure/database/prisma.service';
+import { AbstractGeminiApiProvider } from '../domain/providers/abstract.gemini.api.provider';
+import { GeminiApiProvider } from '../infrastructure/providers/gemini.api.provider';
 
 describe('MeasureController', () => {
   let controller: MeasureController;
@@ -20,6 +22,10 @@ describe('MeasureController', () => {
         {
           provide: AbstractMeasureRepository,
           useClass: MeasureRepository,
+        },
+        {
+          provide: AbstractGeminiApiProvider,
+          useClass: GeminiApiProvider,
         },
         PrismaService,
       ],
