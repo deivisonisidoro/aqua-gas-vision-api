@@ -27,10 +27,9 @@ export class MeasureController {
   @Get(':customer_code/list')
   find(
     @Param('customer_code') customer_code: string,
-    @Query() MeasureParametersDto?: MeasureParametersDto,
+    @Query() measureParametersDto?: MeasureParametersDto,
   ) {
-    MeasureParametersDto = { customer_code, ...MeasureParametersDto };
-    return this.measureService.find(MeasureParametersDto);
+    return this.measureService.find(customer_code, measureParametersDto);
   }
 
   @Patch('confirm')

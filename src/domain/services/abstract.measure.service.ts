@@ -19,7 +19,10 @@ export abstract class AbstractMeasureService {
    * @param MeasureParametersDto - The dto with the all query fields.
    * @returns Promise of measurements associated with the given customer code.
    */
-  abstract find(MeasureParametersDto?: MeasureParametersDto): Promise<any>;
+  abstract find(
+    customer_code: string,
+    MeasureParametersDto?: MeasureParametersDto,
+  ): Promise<any>;
 
   /**
    * Confirms a measurement.

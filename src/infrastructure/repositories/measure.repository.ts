@@ -23,6 +23,48 @@ export class MeasureRepository extends AbstractMeasureRepository {
     });
   }
 
+  async findByTypeAndDate(
+    measure_type?: string,
+    measure_datetime?: Date,
+  ): Promise<MeasureResponseDto[]> {
+    const whereClause: any = {};
+
+    if (measure_type) {
+      whereClause.measure_type = measure_type;
+    }
+
+    if (measure_datetime) {
+      const startOfMonth = new Date(
+        measure_datetime.getFullYear(),
+        measure_datetime.getMonth(),
+        1,
+      );
+      const endOfMonth = new Date(
+        measure_datetime.getFullYear(),
+        measure_datetime.getMonth() + 1,
+        0,
+      );
+
+      whereClause.measure_datetime = {
+        gte: startOfMonth,
+        lte: endOfMonth,
+      };
+    }
+
+    const measures = await this.prisma.measure.findMany({
+      where: whereClause,
+      select: {
+        measure_uuid: true,
+        measure_datetime: true,
+        measure_type: true,
+        has_confirmed: true,
+        image_url: true,
+      },
+    });
+
+    return measures;
+  }
+
   async findAll(): Promise<Measure[]> {
     return this.prisma.measure.findMany();
   }
@@ -38,12 +80,11 @@ export class MeasureRepository extends AbstractMeasureRepository {
     });
   }
   async find(
-    MeasureParametersDto?: MeasureParametersDto,
+    customer_code: string,
+    measureParametersDto?: MeasureParametersDto,
   ): Promise<MeasureResponseDto[]> {
-    console.log(MeasureParametersDto);
-
     const measures = await this.prisma.measure.findMany({
-      where: { ...MeasureParametersDto },
+      where: { customer_code, ...measureParametersDto },
       select: {
         measure_value: false,
         customer_code: false,

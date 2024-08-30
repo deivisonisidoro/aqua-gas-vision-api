@@ -41,7 +41,19 @@ export abstract class AbstractMeasureRepository {
    * @returns Promise of measurements associated with the given customer code or null if not found.
    */
   abstract find(
+    customer_code: string,
     MeasureParametersDto?: MeasureParametersDto,
+  ): Promise<MeasureResponseDto[]>;
+
+  /**
+   * Finds measurements by measure type and date.
+   * @param measure_type - The type of measurement (e.g., 'WATER' or 'GAS').
+   * @param measure_datetime - The date and time when the measurement was taken.
+   * @returns Promise of measurements matching the type and date criteria.
+   */
+  abstract findByTypeAndDate(
+    measure_type?: string,
+    measure_datetime?: Date,
   ): Promise<MeasureResponseDto[]>;
 
   /**
