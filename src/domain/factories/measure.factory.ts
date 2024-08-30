@@ -11,15 +11,18 @@ export class MeasureFactory {
    * @param {MeasureEntityType} props - The properties to initialize the MeasureEntity.
    */
   static create(props: MeasureEntityType): MeasureEntity {
-    const measureEntity = new MeasureEntity({} as MeasureEntityType);
-
+    const measureEntity = new MeasureEntity({
+      measure_datetime: props.measure_datetime,
+      measure_type: props.measure_type,
+      image_url: props.image_url,
+      customer_code: props.customer_code,
+      has_confirmed: false,
+    });
     measureEntity.measure_datetime = props.measure_datetime;
     measureEntity.measure_type = props.measure_type;
-    measureEntity.has_confirmed = props.has_confirmed;
     measureEntity.image_url = props.image_url;
     measureEntity.customer_code = props.customer_code;
-    measureEntity.measure_value = props.measure_value;
-
+    measureEntity.has_confirmed = false;
     return measureEntity;
   }
 }
