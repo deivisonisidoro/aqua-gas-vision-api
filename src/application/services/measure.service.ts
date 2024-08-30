@@ -10,6 +10,7 @@ import { AbstractMeasureRepository } from '../../domain/repositories/abstract.me
 import { MeasureParametersDto } from '../../domain/dto/params.measure.dto';
 import { ErrorMessagesMessageEnum } from '../../domain/enums/error.messages/message.enum';
 import { AbstractGeminiApiProvider } from '../../domain/providers/abstract.gemini.api.provider';
+import { MeasureFactory } from '../../domain/factories/measure.factory';
 
 @Injectable()
 export class MeasureService extends AbstractMeasureService {
@@ -21,9 +22,15 @@ export class MeasureService extends AbstractMeasureService {
   }
 
   async upload(uploadMeasureDto: UploadMeasureDto) {
+    const measureEntity = MeasureFactory.create({
+      customer_code: uploadMeasureDto.customer_code,
+      image_url: uploadMeasureDto.image,
+      measure_datetime: uploadMeasureDto.measure_datetime,
+      measure_type: uploadMeasureDto.measure_type,
+    });
     const measures = await this.measureRepository.findByTypeAndDate(
-      uploadMeasureDto.measure_type,
-      new Date(uploadMeasureDto.measure_datetime),
+      measureEntity.measure_type,
+      new Date(measureEntity.measure_datetime),
     );
 
     if (measures.length > 0) {
@@ -33,10 +40,15 @@ export class MeasureService extends AbstractMeasureService {
       );
     }
     const measure_value = await this.geminiApiProvider.getMeasurementValue(
-      uploadMeasureDto.image,
+      measureEntity.image_url,
     );
-    uploadMeasureDto.measure_value = measure_value;
-    return this.measureRepository.create(uploadMeasureDto);
+    return this.measureRepository.create({
+      customer_code: measureEntity.customer_code,
+      measure_datetime: measureEntity.measure_datetime,
+      measure_type: measureEntity.measure_type,
+      measure_value: measure_value,
+      image: measureEntity.image_url,
+    });
   }
 
   async find(
