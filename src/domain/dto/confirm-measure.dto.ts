@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsUUID, IsInt, Min } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsUUID, IsInt, Min, IsOptional } from 'class-validator';
 import { ErrorMessagesMessageEnum } from '../enums/error.messages/message.enum';
 
 /**
@@ -20,4 +20,11 @@ export class ConfirmMeasurementDto {
   @IsInt({ message: ErrorMessagesMessageEnum.INVALID_CONFIRMED_VALUE })
   @Min(0, { message: ErrorMessagesMessageEnum.MIN_CONFIRMED_VALUE })
   confirmed_value: number;
+
+  @ApiPropertyOptional({
+    description: 'Indicates whether the measurement has been confirmed.',
+    type: Boolean,
+  })
+  @IsOptional()
+  has_confirmed?: boolean;
 }
