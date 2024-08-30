@@ -13,6 +13,12 @@ export class MeasureRepository extends AbstractMeasureRepository {
     super();
   }
 
+  /**
+   * Creates a new measurement record in the database.
+   *
+   * @param {UploadMeasureDto} data - The data transfer object containing the measurement details.
+   * @returns {Promise<MeasureResponseDto>} A promise that resolves to the newly created measurement.
+   */
   async create(data: UploadMeasureDto): Promise<MeasureResponseDto> {
     return this.prisma.measure.create({
       data: {
@@ -34,6 +40,13 @@ export class MeasureRepository extends AbstractMeasureRepository {
     });
   }
 
+  /**
+   * Finds measurements by type and date.
+   *
+   * @param {string} [measure_type] - The type of measurement to search for.
+   * @param {Date} [measure_datetime] - The date of the measurement to search for.
+   * @returns {Promise<MeasureResponseDto[]>} A promise that resolves to an array of measurements matching the criteria.
+   */
   async findByTypeAndDate(
     measure_type?: string,
     measure_datetime?: Date,
@@ -76,15 +89,33 @@ export class MeasureRepository extends AbstractMeasureRepository {
     return measures;
   }
 
+  /**
+   * Retrieves all measurement records from the database.
+   *
+   * @returns {Promise<MeasureResponseDto[]>} A promise that resolves to an array of all measurements.
+   */
   async findAll(): Promise<MeasureResponseDto[]> {
     return this.prisma.measure.findMany();
   }
 
+  /**
+   * Finds a single measurement by its UUID.
+   *
+   * @param {string} measure_uuid - The UUID of the measurement to find.
+   * @returns {Promise<Measure | null>} A promise that resolves to the measurement, or null if not found.
+   */
   async findOne(measure_uuid: string): Promise<Measure | null> {
     return this.prisma.measure.findUnique({
       where: { measure_uuid },
     });
   }
+
+  /**
+   * Finds measurements by customer code.
+   *
+   * @param {string} customer_code - The customer code to search for.
+   * @returns {Promise<MeasureResponseDto[] | null>} A promise that resolves to an array of measurements, or null if not found.
+   */
   async findByCustomerCode(
     customer_code: string,
   ): Promise<MeasureResponseDto[] | null> {
@@ -92,6 +123,14 @@ export class MeasureRepository extends AbstractMeasureRepository {
       where: { customer_code },
     });
   }
+
+  /**
+   * Finds measurements based on customer code and additional parameters.
+   *
+   * @param {string} customer_code - The customer code to search for.
+   * @param {MeasureParametersDto} [measureParametersDto] - Additional parameters for filtering the results.
+   * @returns {Promise<MeasureResponseDto[]>} A promise that resolves to an array of measurements.
+   */
   async find(
     customer_code: string,
     measureParametersDto?: MeasureParametersDto,
@@ -110,6 +149,14 @@ export class MeasureRepository extends AbstractMeasureRepository {
     });
     return measures;
   }
+
+  /**
+   * Updates a measurement record in the database.
+   *
+   * @param {string} measure_uuid - The UUID of the measurement to update.
+   * @param {Partial<ConfirmMeasurementDto>} data - The data to update the measurement with.
+   * @returns {Promise<MeasureResponseDto>} A promise that resolves to the updated measurement.
+   */
   async update(
     measure_uuid: string,
     data: Partial<ConfirmMeasurementDto>,

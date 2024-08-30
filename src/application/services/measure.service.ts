@@ -22,6 +22,14 @@ export class MeasureService extends AbstractMeasureService {
     super();
   }
 
+  /**
+   * Uploads a new measure based on the provided data.
+   * Validates the measure type and date before creating the measure entity.
+   *
+   * @param {UploadMeasureDto} uploadMeasureDto - Data Transfer Object containing the measurement data.
+   * @returns {Promise<MeasureEntity>} The created measure entity.
+   * @throws {ConflictException} If a measurement with the same type and date already exists.
+   */
   async upload(uploadMeasureDto: UploadMeasureDto) {
     const measureEntity = MeasureFactory.create({
       customer_code: uploadMeasureDto.customer_code,
@@ -52,6 +60,14 @@ export class MeasureService extends AbstractMeasureService {
     });
   }
 
+  /**
+   * Finds measurements for a specific customer based on the provided parameters.
+   *
+   * @param {string} customer_code - The code of the customer whose measurements are to be found.
+   * @param {MeasureParametersDto} measureParametersDto - Data Transfer Object containing the search parameters.
+   * @returns {Promise<{ customer_code: string; measures: MeasureEntity[] }>} An object containing the customer code and the list of found measurements.
+   * @throws {NotFoundException} If no measurements are found.
+   */
   async find(
     customer_code: string,
     measureParametersDto: MeasureParametersDto,
@@ -73,6 +89,14 @@ export class MeasureService extends AbstractMeasureService {
     };
   }
 
+  /**
+   * Confirms a measurement by updating its status to confirmed.
+   *
+   * @param {ConfirmMeasurementDto} confirmMeasurementDto - Data Transfer Object containing the confirmation details.
+   * @returns {Promise<{ success: boolean }>} An object indicating the success of the operation.
+   * @throws {NotFoundException} If the measurement is not found.
+   * @throws {ConflictException} If the measurement has already been confirmed.
+   */
   async confirm(confirmMeasurementDto: ConfirmMeasurementDto) {
     const measure = await this.measureRepository.findOne(
       confirmMeasurementDto.measure_uuid,
