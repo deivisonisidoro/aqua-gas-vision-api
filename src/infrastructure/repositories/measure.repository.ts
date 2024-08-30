@@ -19,6 +19,7 @@ export class MeasureRepository extends AbstractMeasureRepository {
         customer_code: data.customer_code,
         image_url: data.image,
         measure_value: data.measure_value,
+        measure_datetime: data.measure_datetime,
       },
     });
   }
