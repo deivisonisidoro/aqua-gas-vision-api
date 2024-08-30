@@ -11,6 +11,7 @@ import { MeasureParametersDto } from '../../domain/dto/params.measure.dto';
 import { ErrorMessagesMessageEnum } from '../../domain/enums/error.messages/message.enum';
 import { AbstractGeminiApiProvider } from '../../domain/providers/abstract.gemini.api.provider';
 import { MeasureFactory } from '../../domain/factories/measure.factory';
+import { MeasureEntity } from '../../domain/entities/measure.entity';
 
 @Injectable()
 export class MeasureService extends AbstractMeasureService {
@@ -76,7 +77,6 @@ export class MeasureService extends AbstractMeasureService {
     const measure = await this.measureRepository.findOne(
       confirmMeasurementDto.measure_uuid,
     );
-
     if (!measure) {
       throw new NotFoundException(
         ErrorMessagesMessageEnum.MEASURE_NOT_FOUND,
@@ -89,10 +89,15 @@ export class MeasureService extends AbstractMeasureService {
         'CONFIRMATION_DUPLICATE',
       );
     }
-    confirmMeasurementDto.has_confirmed = true;
+    const measureEntity = new MeasureEntity({
+      ...measure,
+      has_confirmed: true,
+      measure_value: confirmMeasurementDto.confirmed_value,
+    });
+
     await this.measureRepository.update(
       confirmMeasurementDto.measure_uuid,
-      confirmMeasurementDto,
+      measureEntity,
     );
     return {
       success: true,
