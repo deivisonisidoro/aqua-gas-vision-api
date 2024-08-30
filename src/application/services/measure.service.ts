@@ -16,12 +16,28 @@ export class MeasureService extends AbstractMeasureService {
     super();
   }
 
-  upload(uploadMeasureDto: UploadMeasureDto) {
+  async upload(uploadMeasureDto: UploadMeasureDto) {
+    const measures = await this.measureRepository.findByTypeAndDate(
+      uploadMeasureDto.measure_type,
+      new Date(uploadMeasureDto.measure_datetime),
+    );
+    if (measures.length !== 0) {
+      throw new ConflictException(
+        ErrorMessagesMessageEnum.CONFIRMATION_DUPLICATE,
+        'DOUBLE_REPORT',
+      );
+    }
     return this.measureRepository.create(uploadMeasureDto);
   }
 
-  async find(MeasureParametersDto: MeasureParametersDto) {
-    const measures = await this.measureRepository.find(MeasureParametersDto);
+  async find(
+    customer_code: string,
+    measureParametersDto: MeasureParametersDto,
+  ) {
+    const measures = await this.measureRepository.find(
+      customer_code,
+      measureParametersDto,
+    );
     if (measures.length == 0) {
       throw new NotFoundException(
         ErrorMessagesMessageEnum.MEASURE_NOT_FOUND,
@@ -30,7 +46,7 @@ export class MeasureService extends AbstractMeasureService {
     }
 
     return {
-      customer_code: MeasureParametersDto.customer_code,
+      customer_code: customer_code,
       measures,
     };
   }
