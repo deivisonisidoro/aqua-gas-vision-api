@@ -71,4 +71,24 @@ describe('MeasureEntity', () => {
     const entity = new MeasureEntity(optionalUuidProps);
     expect(entity.measure_uuid).toBeUndefined();
   });
+
+  it('should throw an exception for invalid datetime', () => {
+    const entity = new MeasureEntity(measureProps);
+    expect(() => {
+      entity.measure_datetime = new Date('invalid-date');
+    }).toThrow(BadRequestException);
+    expect(() => {
+      entity.measure_datetime = null;
+    }).toThrow(BadRequestException);
+  });
+
+  it('should throw an exception for non-boolean has_confirmed', () => {
+    const entity = new MeasureEntity(measureProps);
+    expect(() => {
+      entity.has_confirmed = 'true' as any;
+    }).toThrow(BadRequestException);
+    expect(() => {
+      entity.has_confirmed = 1 as any;
+    }).toThrow(BadRequestException);
+  });
 });
