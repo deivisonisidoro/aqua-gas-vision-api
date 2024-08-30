@@ -9,10 +9,14 @@ import { AbstractMeasureService } from '../../domain/services/abstract.measure.s
 import { AbstractMeasureRepository } from '../../domain/repositories/abstract.measure.repository';
 import { MeasureParametersDto } from '../../domain/dto/params.measure.dto';
 import { ErrorMessagesMessageEnum } from '../../domain/enums/error.messages/message.enum';
+import { AbstractGeminiApiProvider } from '../../domain/providers/abstract.gemini.api.provider';
 
 @Injectable()
 export class MeasureService extends AbstractMeasureService {
-  constructor(protected readonly measureRepository: AbstractMeasureRepository) {
+  constructor(
+    protected readonly measureRepository: AbstractMeasureRepository,
+    protected readonly geminiApiProvider: AbstractGeminiApiProvider,
+  ) {
     super();
   }
 
@@ -21,12 +25,17 @@ export class MeasureService extends AbstractMeasureService {
       uploadMeasureDto.measure_type,
       new Date(uploadMeasureDto.measure_datetime),
     );
-    if (measures.length !== 0) {
+
+    if (measures.length > 0) {
       throw new ConflictException(
         ErrorMessagesMessageEnum.CONFIRMATION_DUPLICATE,
         'DOUBLE_REPORT',
       );
     }
+    const measure_value = await this.geminiApiProvider.getMeasurementValue(
+      uploadMeasureDto.image,
+    );
+    uploadMeasureDto.measure_value = measure_value;
     return this.measureRepository.create(uploadMeasureDto);
   }
 
