@@ -64,4 +64,14 @@ export enum ErrorMessagesMessageEnum {
    * Error message for when a measure has already been recorded for the month.
    */
   CONFIRMATION_DUPLICATE = 'Leitura do mês já realizada',
+
+  /**
+   * Error message for an invalid datetime.
+   */
+  INVALID_DATETIME = 'Data/hora inválida',
+
+  /**
+   * Error message for an invalid confirmation status.
+   */
+  INVALID_CONFIRMATION_STATUS = 'Status de confirmação inválido',
 }
