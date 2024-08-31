@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './infrastructure/modules/app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { EnvironmentVariablesConfig } from './infrastructure/configs/environment.variables.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,6 +19,6 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(3000);
+  await app.listen(EnvironmentVariablesConfig.port);
 }
 bootstrap();

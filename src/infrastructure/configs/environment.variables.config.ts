@@ -45,6 +45,15 @@ export class EnvironmentVariablesConfig {
     EnvironmentVariablesConfig.getEnvVariable('GEMINI_API_KEY');
 
   /**
+   * The port on which the application will run.
+   * @type {number}
+   */
+  static readonly port: number = parseInt(
+    EnvironmentVariablesConfig.getEnvVariable('PORT'),
+    10,
+  );
+
+  /**
    * Retrieves the value of an environment variable.
    *
    * @param {string} key - The key of the environment variable to retrieve.
