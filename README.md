@@ -45,8 +45,6 @@ O projeto segue os princípios da Arquitetura Limpa, garantindo uma separação 
 
 A estrutura do projeto é organizada da seguinte forma:
 
-- `dist/` - Diretório gerado após a compilação TypeScript.
-- `node_modules/` - Dependências do projeto.
 - `prisma/` - Arquivos de configuração do Prisma, incluindo `schema.prisma`.
 - `src/` - Código fonte da aplicação:
   - `application/` - Serviços e lógica de negócio.
