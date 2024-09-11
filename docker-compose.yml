@@ -1,25 +1,39 @@
-# YAML configuration file for Docker Compose version 3.8
-version: '3.8'
+version: '3.5'
 
-# Define services
 services:
-
-  # Database service using PostgreSQL image
-  database:
-    image: postgres:latest  # Use the latest PostgreSQL image from Docker Hub
+  db:
+    image: postgres
+    restart: always
     environment:
-      POSTGRES_DB: databasename  # Define the name of the database
-      POSTGRES_USER: username    # Define the username for accessing the database
-      POSTGRES_PASSWORD: password  # Define the password for the user
+      - POSTGRES_PASSWORD=postgres
+    container_name: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
     ports:
-      - "5432:5432"  # Forward the container's port 5432 to the host machine's port 5432 for accessing PostgreSQL
+      - '5432:5432'
 
-  # Backend service
-  backend:
-    build: .  # Build the Docker image using the Dockerfile in the current directory
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nest-docker-postgres
+    environment:
+      - PORT=${PORT}
     ports:
-      - "3333:3333"  # Forward the container's port 3333 to the host machine's port 3333 for accessing the backend service
+      - '80:3000'
     depends_on:
-      - database  # Ensure that the backend service starts after the database service is up and running
-    env_file:
-      - .env  # Load environment variables from the .env file in the current directory
+      - db
+    volumes:
+      - ./src:/app/src
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    container_name: nest-pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=pgadmin4
+    ports:
+      - '5050:80'
+    depends_on:
+      - db
